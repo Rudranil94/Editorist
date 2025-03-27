@@ -4,20 +4,11 @@ FROM node:20-alpine as frontend
 # Set working directory
 WORKDIR /build
 
-# Copy frontend files
-COPY frontend/package*.json frontend/package-lock.json ./
+# Copy the entire frontend directory
+COPY frontend/ .
+
+# Install dependencies and build
 RUN npm install
-
-# Copy the rest of the frontend code
-COPY frontend/src ./src
-COPY frontend/public ./public
-COPY frontend/index.html ./
-COPY frontend/tsconfig*.json ./
-COPY frontend/vite.config.ts ./
-COPY frontend/tailwind.config.js ./
-COPY frontend/postcss.config.js ./
-
-# Build the frontend
 RUN npm run build
 
 # Stage 2: Build the backend
