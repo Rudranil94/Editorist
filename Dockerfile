@@ -2,16 +2,18 @@
 FROM node:20-alpine as frontend
 
 # Set working directory
-WORKDIR /app
+WORKDIR /build
 
-# Copy the entire frontend directory
-COPY frontend ./frontend
+# Copy package files first
+COPY frontend/package.json frontend/package-lock.json ./
 
-# Change to frontend directory
-WORKDIR /app/frontend
-
-# Install dependencies and build
+# Install dependencies
 RUN npm ci
+
+# Copy the rest of the frontend code
+COPY frontend/ .
+
+# Build the frontend
 RUN npm run build
 
 # Stage 2: Build the backend
@@ -39,7 +41,7 @@ RUN mkdir -p /app/uploads /app/logs /app/static && \
     chmod -R 755 /app/uploads /app/logs /app/static
 
 # Copy built frontend from frontend stage
-COPY --from=frontend /app/frontend/dist /app/static
+COPY --from=frontend /build/dist /app/static
 
 # Set environment variables
 ENV PYTHONPATH=/app \
