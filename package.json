@@ -1,0 +1,19 @@
+{
+  "name": "editorist",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "start": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "test": "cd frontend && npm run test",
+    "test:e2e": "cd frontend && npm run test:e2e",
+    "test:e2e:headless": "cd frontend && npm run test:e2e:headless",
+    "test:coverage": "cd frontend && npm run test:coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
