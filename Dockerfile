@@ -2,7 +2,7 @@
 FROM node:20-alpine as frontend
 
 # Set working directory
-WORKDIR /app/frontend
+WORKDIR /build
 
 # Copy package files first
 COPY frontend/package.json frontend/package-lock.json ./
@@ -41,7 +41,7 @@ RUN mkdir -p /app/uploads /app/logs /app/static && \
     chmod -R 755 /app/uploads /app/logs /app/static
 
 # Copy built frontend from frontend stage
-COPY --from=frontend /app/frontend/dist /app/static
+COPY --from=frontend /build/dist /app/static
 
 # Set environment variables
 ENV PYTHONPATH=/app \
