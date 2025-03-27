@@ -1,12 +1,14 @@
-# Build stage for frontend
-FROM node:20-alpine as frontend-build
-WORKDIR /app/frontend
+# Stage 1: Build the frontend
+FROM node:20-alpine as frontend
+WORKDIR /frontend
+# Copy package files first for better caching
 COPY frontend/package*.json ./
 RUN npm install
-COPY frontend/ .
+# Copy the rest of the frontend code
+COPY frontend/ ./
 RUN npm run build
 
-# Python backend stage
+# Stage 2: Build the backend
 FROM python:3.11-slim
 WORKDIR /app
 
@@ -23,16 +25,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app/
 COPY config/ ./config/
 
-# Copy built frontend from build stage
-COPY --from=frontend-build /app/frontend/dist /app/static
-
 # Create necessary directories
-RUN mkdir -p /app/uploads /app/logs
+RUN mkdir -p /app/uploads /app/logs /app/static
+
+# Copy built frontend from frontend stage
+COPY --from=frontend /frontend/dist /app/static
 
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV FLASK_APP=app
 ENV FLASK_ENV=production
+ENV PORT=8000
 
 # Expose port
 EXPOSE 8000
