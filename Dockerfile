@@ -19,12 +19,15 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend code
+# Copy backend code and config
 COPY app/ ./app/
 COPY config/ ./config/
 
 # Copy built frontend from build stage
 COPY --from=frontend-build /app/frontend/dist /app/static
+
+# Create necessary directories
+RUN mkdir -p /app/uploads /app/logs
 
 # Set environment variables
 ENV PYTHONPATH=/app
