@@ -2,16 +2,11 @@
 FROM node:20-alpine as frontend
 WORKDIR /frontend
 
-# Copy package files first for better caching
-COPY frontend/package*.json ./
+# Copy the entire frontend directory
+COPY frontend/ .
 
-# Install dependencies
+# Install dependencies and build
 RUN npm install
-
-# Copy the rest of the frontend code
-COPY frontend/ ./
-
-# Build the frontend
 RUN npm run build
 
 # Stage 2: Build the backend
